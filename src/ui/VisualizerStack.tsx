@@ -42,7 +42,7 @@ export function VisualizerStack({
   }, [engine]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <figure>
         <figcaption className="viz-label">
           <span>{t("spectrogram")}</span>

@@ -236,9 +236,9 @@ export default function App() {
       )}
 
       {/* ── Main workspace ── */}
-      <main className="app-main grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
+      <main className="app-main grid grid-cols-1 gap-7 lg:grid-cols-[1fr_350px]">
         {/* Left: signal + custom EQ */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-7">
           <Panel title="Signal" icon={<Activity size={13} />}>
             {running ? (
               <VisualizerStack engine={engine} t={t} />
@@ -285,10 +285,10 @@ export default function App() {
         </div>
 
         {/* Right: transport + presets + status */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-7">
           <Panel>
             {/* Devices */}
-            <div className="mb-4 grid grid-cols-1 gap-3">
+            <div className="mb-6 grid grid-cols-1 gap-4">
               <label className="block">
                 <span className="f-label">{t("inputDevice")}</span>
                 <select
@@ -326,7 +326,7 @@ export default function App() {
             </div>
 
             {/* Transport */}
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-3">
               {!running ? (
                 <button
                   type="button"
@@ -367,7 +367,7 @@ export default function App() {
             </div>
 
             {recording && (
-              <p className="mt-2.5 flex items-center gap-1.5 text-xs text-[var(--danger)]">
+              <p className="mt-3 flex items-center gap-1.5 text-xs text-[var(--danger)]">
                 <span
                   className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
                   style={{ background: "var(--danger)" }}
@@ -380,7 +380,7 @@ export default function App() {
               <a
                 href={recordedUrl}
                 download={`voiceclear-${Date.now()}.wav`}
-                className="export-pill mt-3"
+                className="export-pill mt-4"
               >
                 <ArrowDownToLine size={13} /> {t("exportWav")} ·{" "}
                 {(sampleRate / 1000).toFixed(1)} kHz / 24-bit
@@ -388,7 +388,7 @@ export default function App() {
             )}
 
             {/* Toggles */}
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-6 flex flex-col gap-4">
               <Toggle
                 label={t("monitor")}
                 on={monitorOn}
@@ -412,7 +412,7 @@ export default function App() {
 
           <Panel title={t("presets")}>
             <PresetGrid active={presetId} onSelect={applyPreset} lang={lang} />
-            <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] px-3 py-2.5">
+            <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3">
               <span className="f-label" style={{ marginBottom: 0 }}>
                 {t("engine")}
               </span>
@@ -433,7 +433,7 @@ export default function App() {
           </Panel>
 
           <Panel title="Status">
-            <dl className="grid grid-cols-3 gap-2.5">
+            <dl className="grid grid-cols-3 gap-4">
               <Stat
                 label={t("latency")}
                 value={running ? `${latencyMs}` : "—"}
