@@ -2,17 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   ArrowDownToLine,
-  AudioLines,
   Circle,
   Mic,
   ShieldCheck,
+  SlidersHorizontal,
   Square,
   Waves,
 } from "lucide-react";
-import {
-  AudioEngine,
-  type EngineState,
-} from "./audio/engine";
+import { AudioEngine, type EngineState } from "./audio/engine";
 import { DENOISER_ENGINES } from "./audio/denoiser";
 import {
   DEFAULT_PRESET_ID,
@@ -89,12 +86,18 @@ export default function App() {
       setInputs(
         list
           .filter((d) => d.kind === "audioinput")
-          .map((d) => ({ deviceId: d.deviceId, label: d.label || `Input ${d.deviceId.slice(0, 5)}` })),
+          .map((d) => ({
+            deviceId: d.deviceId,
+            label: d.label || `Input ${d.deviceId.slice(0, 5)}`,
+          })),
       );
       setOutputs(
         list
           .filter((d) => d.kind === "audiooutput")
-          .map((d) => ({ deviceId: d.deviceId, label: d.label || `Output ${d.deviceId.slice(0, 5)}` })),
+          .map((d) => ({
+            deviceId: d.deviceId,
+            label: d.label || `Output ${d.deviceId.slice(0, 5)}`,
+          })),
       );
     } catch {
       /* device enumeration can fail pre-permission; ignore */
@@ -105,7 +108,10 @@ export default function App() {
     void refreshDevices();
     navigator.mediaDevices?.addEventListener?.("devicechange", refreshDevices);
     return () =>
-      navigator.mediaDevices?.removeEventListener?.("devicechange", refreshDevices);
+      navigator.mediaDevices?.removeEventListener?.(
+        "devicechange",
+        refreshDevices,
+      );
   }, [refreshDevices]);
 
   // Actions ---------------------------------------------------------------------
@@ -149,50 +155,96 @@ export default function App() {
     if (!recording) return;
     const blob = engine.stopRecording();
     setRecording(false);
-    if (blob) {
-      const url = URL.createObjectURL(blob);
-      setRecordedUrl(url);
-    }
+    if (blob) setRecordedUrl(URL.createObjectURL(blob));
   };
 
   const running = state === "running";
 
   // Render -----------------------------------------------------------------------
   return (
-    <div className="mx-auto flex min-h-full max-w-6xl flex-col gap-4 px-4 py-6">
-      {/* Header */}
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src="/mic.svg" alt="" className="h-10 w-10" />
-          <div>
-            <h1 className="text-lg font-bold tracking-tight">{t("appName")}</h1>
-            <p className="text-xs text-zinc-500">{t("tagline")}</p>
-          </div>
+    <div style={{ minHeight: "100%" }}>
+      {/* ── Frosted glass header ── */}
+      <header className="glass-header">
+        <div className="brand">
+          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden>
+            <rect width="32" height="32" rx="8" fill="#4285f4" />
+            <g stroke="#fff" strokeWidth="2.6" strokeLinecap="round">
+              <line x1="7" y1="13" x2="7" y2="19" />
+              <line x1="12" y1="9" x2="12" y2="23" />
+              <line x1="16" y1="6" x2="16" y2="26" />
+              <line x1="20" y1="10" x2="20" y2="22" />
+              <line x1="25" y1="14" x2="25" y2="18" />
+            </g>
+          </svg>
+          <span className="brand-name">
+            VoiceClear
+            <span className="brand-dot">.</span>Studio
+            <span className="g-dots" aria-hidden>
+              <i style={{ background: "#4285f4" }} />
+              <i style={{ background: "#ea4335" }} />
+              <i style={{ background: "#fbbc05" }} />
+              <i style={{ background: "#34a853" }} />
+            </span>
+          </span>
+          <span className="brand-divider" />
+          <span className="brand-section">AI Voice DSP</span>
         </div>
-        <button
-          type="button"
-          onClick={() => setLang(lang === "th" ? "en" : "th")}
-          className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs font-semibold text-zinc-400 hover:border-zinc-700"
-        >
-          {lang === "th" ? "EN" : "ไทย"}
-        </button>
+
+        <div className="seg" role="group" aria-label="Language">
+          <button
+            type="button"
+            className={`seg-btn ${lang === "th" ? "active" : ""}`}
+            onClick={() => setLang("th")}
+          >
+            ไทย
+          </button>
+          <button
+            type="button"
+            className={`seg-btn ${lang === "en" ? "active" : ""}`}
+            onClick={() => setLang("en")}
+          >
+            EN
+          </button>
+        </div>
       </header>
 
+      {/* ── Hero ── */}
+      <section className="hero">
+        <span className="mono">
+          Web-Based AI Voice Denoising · 100% On-Device DSP
+        </span>
+        <h1>{t("tagline").split("—")[0]}</h1>
+        <p>
+          {lang === "th"
+            ? "ตัดเสียงรบกวนด้วย AI + เก็บละเอียดแบบ Studio — AEC, Denoise, EQ 5 Band, Compressor, Limiter ในเบราว์เซอร์ของคุณ"
+            : "AI noise suppression + studio mastering in your browser — AEC, denoise, 5-band EQ, compressor, limiter."}
+        </p>
+        <p className="privacy">
+          <span className="mono" style={{ color: "var(--live)" }}>
+            <ShieldCheck size={11} style={{ verticalAlign: "-1px" }} />{" "}
+            {t("privacyNote")}
+          </span>
+        </p>
+      </section>
+
       {error && (
-        <div role="alert" className="rounded-xl border border-red-900/60 bg-red-950/40 px-4 py-2.5 text-sm text-red-300">
-          {error}
+        <div className="app-main" style={{ paddingTop: 0 }}>
+          <div role="alert" className="alert">
+            {error}
+          </div>
         </div>
       )}
 
-      <main className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_340px]">
-        {/* Left column: visualizers + custom EQ */}
-        <div className="flex flex-col gap-4">
+      {/* ── Main workspace ── */}
+      <main className="app-main grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
+        {/* Left: signal + custom EQ */}
+        <div className="flex flex-col gap-5">
           <Panel title="Signal" icon={<Activity size={13} />}>
             {running ? (
               <VisualizerStack engine={engine} t={t} />
             ) : (
-              <div className="flex h-56 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-zinc-800 text-zinc-600">
-                <Waves size={28} strokeWidth={1.5} />
+              <div className="flex h-56 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-[var(--faint)]" style={{ borderColor: "var(--border-strong)" }}>
+                <Waves size={26} strokeWidth={1.5} />
                 <p className="max-w-xs text-center text-sm">
                   {state === "starting"
                     ? "…"
@@ -204,7 +256,10 @@ export default function App() {
             )}
           </Panel>
 
-          <Panel title={t("customEq")} icon={<AudioLines size={13} />}>
+          <Panel
+            title={`${t("customEq")} · Sliders`}
+            icon={<SlidersHorizontal size={13} />}
+          >
             <EqPanel
               params={params}
               onPatch={(p) => {
@@ -220,7 +275,7 @@ export default function App() {
               t={t}
             />
             {presetId !== "custom" && (
-              <p className="mt-3 text-[11px] text-zinc-600">
+              <p className="mt-3 text-[11px] text-[var(--faint)]">
                 {lang === "th"
                   ? "เลือกโปรไฟล์ Custom เพื่อปรับค่าได้"
                   : "Switch to the Custom profile to edit values"}
@@ -229,18 +284,18 @@ export default function App() {
           </Panel>
         </div>
 
-        {/* Right column: transport + presets + status */}
-        <div className="flex flex-col gap-4">
+        {/* Right: transport + presets + status */}
+        <div className="flex flex-col gap-5">
           <Panel>
             {/* Devices */}
-            <div className="mb-3 grid grid-cols-1 gap-2">
-              <label className="block text-xs text-zinc-400">
-                {t("inputDevice")}
+            <div className="mb-4 grid grid-cols-1 gap-3">
+              <label className="block">
+                <span className="f-label">{t("inputDevice")}</span>
                 <select
                   value={inputId}
                   onChange={(e) => setInputId(e.target.value)}
                   disabled={running}
-                  className="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
+                  className="io-select"
                 >
                   <option value="">Default</option>
                   {inputs.map((d) => (
@@ -250,15 +305,15 @@ export default function App() {
                   ))}
                 </select>
               </label>
-              <label className="block text-xs text-zinc-400">
-                {t("outputDevice")}
+              <label className="block">
+                <span className="f-label">{t("outputDevice")}</span>
                 <select
                   value={outputId}
                   onChange={(e) => {
                     setOutputId(e.target.value);
                     if (running) void engine.selectOutput(e.target.value);
                   }}
-                  className="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2 py-1.5 text-sm text-zinc-200"
+                  className="io-select"
                 >
                   <option value="">System default</option>
                   {outputs.map((d) => (
@@ -271,13 +326,13 @@ export default function App() {
             </div>
 
             {/* Transport */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2.5">
               {!running ? (
                 <button
                   type="button"
                   onClick={startMic}
                   disabled={state === "starting"}
-                  className="flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950 shadow-[0_0_20px_rgba(52,211,153,0.35)] transition hover:bg-emerald-400 disabled:opacity-50"
+                  className="btn btn-accent"
                 >
                   <Mic size={15} /> {t("startMic")}
                 </button>
@@ -285,9 +340,9 @@ export default function App() {
                 <button
                   type="button"
                   onClick={stopMic}
-                  className="flex items-center gap-2 rounded-full bg-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-100 transition hover:bg-zinc-600"
+                  className="btn"
                 >
-                  <Square size={14} /> {t("stopMic")}
+                  <Square size={13} /> {t("stopMic")}
                 </button>
               )}
 
@@ -296,24 +351,27 @@ export default function App() {
                   type="button"
                   onClick={startRecording}
                   disabled={!running}
-                  className="flex items-center gap-2 rounded-full border border-red-900/70 bg-red-950/40 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-950/70 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="btn btn-danger"
                 >
-                  <Circle size={12} fill="currentColor" /> {t("record")}
+                  <Circle size={11} fill="currentColor" /> {t("record")}
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="flex animate-pulse items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white"
+                  className="btn btn-danger"
                 >
-                  <Square size={12} fill="currentColor" /> {t("stopRecord")}
+                  <Square size={11} fill="currentColor" /> {t("stopRecord")}
                 </button>
               )}
             </div>
 
             {recording && (
-              <p className="mt-2 flex items-center gap-1.5 text-xs text-red-400">
-                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
+              <p className="mt-2.5 flex items-center gap-1.5 text-xs text-[var(--danger)]">
+                <span
+                  className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
+                  style={{ background: "var(--danger)" }}
+                />
                 {t("recordingHint")}
               </p>
             )}
@@ -322,7 +380,7 @@ export default function App() {
               <a
                 href={recordedUrl}
                 download={`voiceclear-${Date.now()}.wav`}
-                className="mt-2 flex w-fit items-center gap-2 rounded-full border border-emerald-800 bg-emerald-950/40 px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-emerald-950/80"
+                className="export-pill mt-3"
               >
                 <ArrowDownToLine size={13} /> {t("exportWav")} ·{" "}
                 {(sampleRate / 1000).toFixed(1)} kHz / 24-bit
@@ -330,7 +388,7 @@ export default function App() {
             )}
 
             {/* Toggles */}
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-col gap-3">
               <Toggle
                 label={t("monitor")}
                 on={monitorOn}
@@ -343,7 +401,6 @@ export default function App() {
               <Toggle
                 label={t("bypass")}
                 on={bypassOn}
-                accent="amber"
                 onChange={(on) => {
                   setBypassOn(on);
                   engine.setBypass(on);
@@ -355,13 +412,16 @@ export default function App() {
 
           <Panel title={t("presets")}>
             <PresetGrid active={presetId} onSelect={applyPreset} lang={lang} />
-            <div className="mt-3 flex items-center justify-between rounded-xl border border-zinc-800/70 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-400">
-              <span>{t("engine")}</span>
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] px-3 py-2.5">
+              <span className="f-label" style={{ marginBottom: 0 }}>
+                {t("engine")}
+              </span>
               <select
                 value="rnnoise"
-                disabled // phase 2: DeepFilterNet option lands here
+                disabled
                 onChange={() => undefined}
-                className="rounded-md border border-zinc-800 bg-zinc-950 px-2 py-1 text-zinc-200"
+                className="io-select"
+                style={{ width: "auto" }}
               >
                 {DENOISER_ENGINES.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -373,21 +433,35 @@ export default function App() {
           </Panel>
 
           <Panel title="Status">
-            <dl className="grid grid-cols-3 gap-2 text-center">
-              <Stat label={t("latency")} value={running ? `${latencyMs}` : "—"} unit="ms" good={running && latencyMs <= 20} />
-              <Stat label={t("sampleRate")} value={sampleRate ? (sampleRate / 1000).toFixed(1) : "—"} unit="kHz" good />
-              <Stat label="VAD" value={`${Math.round(vad * 100)}`} unit="%" good />
+            <dl className="grid grid-cols-3 gap-2.5">
+              <Stat
+                label={t("latency")}
+                value={running ? `${latencyMs}` : "—"}
+                unit="ms"
+                good={running && latencyMs <= 20}
+              />
+              <Stat
+                label={t("sampleRate")}
+                value={sampleRate ? (sampleRate / 1000).toFixed(1) : "—"}
+                unit="kHz"
+                good
+              />
+              <Stat
+                label="VAD"
+                value={`${Math.round(vad * 100)}`}
+                unit="%"
+                good
+              />
             </dl>
-            <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-zinc-600">
-              <ShieldCheck size={13} className="mt-px shrink-0 text-emerald-700" />
-              {t("privacyNote")}
-            </p>
           </Panel>
         </div>
       </main>
 
-      <footer className="pb-4 text-center text-[11px] text-zinc-700">
-        VoiceClear Studio — client-side AI voice DSP · RNNoise WASM · Web Audio
+      <footer className="app-footer">
+        VoiceClear Studio —
+        {lang === "th"
+          ? " AI ตัดเสียงฝั่งไคลเอนต์ · RNNoise WASM · Web Audio API"
+          : " Client-side AI voice DSP · RNNoise WASM · Web Audio API"}
       </footer>
     </div>
   );
@@ -405,11 +479,11 @@ function Stat({
   good: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/60 py-2">
-      <dt className="text-[10px] tracking-wider text-zinc-500 uppercase">{label}</dt>
-      <dd className={`font-mono text-lg ${good ? "text-emerald-300" : "text-zinc-400"}`}>
+    <div className="stat-card">
+      <dt className="mono">{label}</dt>
+      <dd className={`stat-num ${good ? "good" : ""}`}>
         {value}
-        <span className="ml-0.5 text-[10px] text-zinc-600">{unit}</span>
+        <span className="stat-unit">{unit}</span>
       </dd>
     </div>
   );

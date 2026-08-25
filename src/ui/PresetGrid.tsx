@@ -2,6 +2,14 @@ import type { PresetId } from "../audio/presets";
 import { PRESETS } from "../audio/presets";
 import type { Lang } from "../i18n";
 
+/** Per-preset status dot colour (PPotfolio-style live/beta/dev palette). */
+const DOT_COLOR: Record<PresetId, string> = {
+  warm: "#34a853",
+  broadcast: "#fbbc05",
+  natural: "#4285f4",
+  custom: "#a142f4",
+};
+
 export function PresetGrid({
   active,
   onSelect,
@@ -22,27 +30,18 @@ export function PresetGrid({
             key={id}
             type="button"
             onClick={() => onSelect(id)}
-            className={`rounded-xl border p-3 text-left transition-all ${
-              selected
-                ? "border-emerald-400/70 bg-emerald-400/10 shadow-[0_0_18px_rgba(52,211,153,0.15)]"
-                : "border-zinc-800 bg-zinc-900/60 hover:border-zinc-700"
-            }`}
+            className={`preset-card ${selected ? "active" : ""}`}
           >
-            <div className="flex items-center justify-between">
+            <span className="preset-name">
+              {lang === "th" ? p.nameTh : p.nameEn}
               <span
-                className={`text-sm font-semibold ${
-                  selected ? "text-emerald-300" : "text-zinc-200"
-                }`}
-              >
-                {lang === "th" ? p.nameTh : p.nameEn}
-              </span>
-              {selected && (
-                <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
-              )}
-            </div>
-            <p className="mt-1 line-clamp-2 text-xs leading-snug text-zinc-500">
+                className="preset-dot"
+                style={{ backgroundColor: DOT_COLOR[id] }}
+              />
+            </span>
+            <span className="preset-desc">
               {lang === "th" ? p.descTh : p.descEn}
-            </p>
+            </span>
           </button>
         );
       })}

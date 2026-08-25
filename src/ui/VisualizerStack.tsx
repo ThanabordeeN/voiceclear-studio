@@ -42,33 +42,35 @@ export function VisualizerStack({
   }, [engine]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <figure>
-        <figcaption className="mb-1 text-[11px] tracking-wider text-zinc-500 uppercase">
-          {t("spectrogram")}
+        <figcaption className="viz-label">
+          <span>{t("spectrogram")}</span>
         </figcaption>
         <canvas
           ref={specRef}
-          className="h-36 w-full rounded-lg border border-zinc-800/80 bg-[#0a0a0f]"
+          className="viz-frame h-36 w-full"
         />
       </figure>
       <figure>
-        <figcaption className="mb-1 text-[11px] tracking-wider text-zinc-500 uppercase">
-          {t("waveform")}
+        <figcaption className="viz-label">
+          <span>{t("waveform")}</span>
         </figcaption>
         <canvas
           ref={scopeRef}
-          className="h-20 w-full rounded-lg border border-zinc-800/80 bg-[#0a0a0f]"
+          className="viz-frame h-20 w-full"
         />
       </figure>
       <figure>
-        <figcaption className="mb-1 flex justify-between text-[11px] tracking-wider text-zinc-500 uppercase">
+        <figcaption className="viz-label">
           <span>{t("outputLevel")}</span>
-          <span className="font-mono">-60 dB … 0 dBFS</span>
+          <span className="font-normal tracking-normal normal-case">
+            -60 dB … 0 dBFS
+          </span>
         </figcaption>
         <canvas
           ref={vuRef}
-          className="h-3 w-full rounded-full border border-zinc-800/80 bg-zinc-950"
+          className="viz-frame h-3 w-full"
         />
       </figure>
     </div>
