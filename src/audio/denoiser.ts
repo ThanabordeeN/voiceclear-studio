@@ -25,6 +25,8 @@ export type DenoiserNodeHandle = {
   setStrength(value: number): void;
   /** 0..1 — speech-probability gate threshold. */
   setVadThreshold(value: number): void;
+  /** Subscribe to engine telemetry (VAD, errors). Returns unsubscribe. */
+  onTelemetry(listener: (msg: WorkletTelemetry) => void): () => void;
 };
 
 export type Denoiser = {
@@ -59,10 +61,13 @@ export const RNNOISE_DENOISER: Denoiser = {
       resolveReady = resolve;
       rejectReady = reject;
     });
+
+    const telemetryListeners = new Set<(msg: WorkletTelemetry) => void>();
     node.port.onmessage = (e: MessageEvent<WorkletTelemetry>) => {
       const msg = e.data;
       if (msg.type === "ready") resolveReady();
       else if (msg.type === "error") rejectReady(new Error(msg.error));
+      telemetryListeners.forEach((l) => l(msg));
     };
 
     const resp = await fetch(RNNOISE_WASM_URL);
@@ -78,6 +83,10 @@ export const RNNOISE_DENOISER: Denoiser = {
       },
       setVadThreshold(value: number) {
         node.port.postMessage({ type: "vadThreshold", value });
+      },
+      onTelemetry(listener: (msg: WorkletTelemetry) => void) {
+        telemetryListeners.add(listener);
+        return () => telemetryListeners.delete(listener);
       },
     };
   },

@@ -288,6 +288,19 @@ export class AudioEngine {
 
   // ------------------------------------------------------------ telemetry
 
+  /** Forward AI-engine telemetry (VAD etc.) to UI listeners. */
+  subscribeDenoiserTelemetry(
+    listener: (msg: { type: string; vad?: number; gate?: number }) => void,
+  ): () => void {
+    return (
+      this.denoiserHandle?.onTelemetry((msg) => {
+        if (msg.type === "vad") {
+          listener({ type: "vad", vad: msg.vad, gate: msg.gate });
+        }
+      }) ?? (() => undefined)
+    );
+  }
+
   /** Processed-output spectrum for the spectrogram (frequency domain). */
   getSpectrum(target: Uint8Array): boolean {
     if (!this.analyser) return false;
