@@ -167,7 +167,7 @@ export default function App() {
       <header className="glass-header">
         <div className="brand">
           <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden>
-            <rect width="32" height="32" rx="8" fill="#4285f4" />
+            <rect width="32" height="32" rx="8" fill="var(--accent)" />
             <g stroke="#fff" strokeWidth="2.6" strokeLinecap="round">
               <line x1="7" y1="13" x2="7" y2="19" />
               <line x1="12" y1="9" x2="12" y2="23" />
@@ -179,12 +179,6 @@ export default function App() {
           <span className="brand-name">
             VoiceClear
             <span className="brand-dot">.</span>Studio
-            <span className="g-dots" aria-hidden>
-              <i style={{ background: "#4285f4" }} />
-              <i style={{ background: "#ea4335" }} />
-              <i style={{ background: "#fbbc05" }} />
-              <i style={{ background: "#34a853" }} />
-            </span>
           </span>
           <span className="brand-divider" />
           <span className="brand-section">AI Voice DSP</span>

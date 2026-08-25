@@ -1,50 +1,46 @@
 @import "tailwindcss";
 
 /* ═════════════════════════════════════════════
-   APPLE × GOOGLE DESIGN SYSTEM (VoiceClear Studio)
-   Apple structure · Material You palette & elevation · SF + Google Sans
+   WHITE × GRAPHITE × ORANGE DESIGN SYSTEM
+   Apple structure · warm Material tonal surfaces · SF + Google Sans
    ═════════════════════════════════════════════ */
 :root {
   color-scheme: light;
-  /* M3 v2 (light) — neutral with cool tint */
   --bg: #ffffff;
-  --bg-alt: #f1f4f9; /* surface-container */
-  --bg-raised: #f7f9fd; /* surface-container-high */
-  --border: #e3e8f1;
-  --border-strong: #c8d1e0;
-  --text: #1f1f1f;
-  --muted: #5f6368;
-  --faint: #9aa0a6;
+  --bg-alt: #f4f4f5;
+  --bg-raised: #fafafa;
+  --border: #e3e3e3;
+  --border-strong: #c7c7c7;
+  --text: #202020;
+  --muted: #6f6f73;
+  --faint: #a0a0a5;
 
-  /* Google brand palette */
-  --accent: #4285f4; /* Google Blue 500 */
-  --accent-hover: #2f77e8;
-  --g-red: #ea4335;
-  --g-yellow: #fbbc05;
-  --g-green: #34a853;
-  --g-purple: #a142f4;
-  --on-accent: #ffffff;
+  --accent: #ff9500;
+  --accent-hover: #e57d00;
+  --g-red: #ff3b30;
+  --g-yellow: #ffcc00;
+  --g-green: #34c759;
+  --g-purple: #af52de;
+  --on-accent: #2b1700;
 
-  /* Material tonal containers */
-  --primary-container: #d2e3fc;
-  --on-primary-container: #062e6f;
-  --green-container: #ceead6;
-  --on-green-container: #04320f;
-  --red-container: #f8d7d3;
-  --on-red-container: #5b0d06;
+  --primary-container: #ffead1;
+  --on-primary-container: #5a2d00;
+  --green-container: #e2f5e7;
+  --on-green-container: #123d1c;
+  --red-container: #ffe5e2;
+  --on-red-container: #5b1410;
 
   --live: var(--g-green);
   --beta: var(--g-yellow);
   --dev: var(--g-purple);
   --danger: var(--g-red);
   --danger-hover: #d93025;
-  --canvas-bg: #0c0c10;
-  --header-bg: rgba(248, 250, 253, 0.82);
+  --canvas-bg: #111111;
+  --header-bg: rgba(250, 250, 250, 0.86);
 
-  /* Google elevation */
   --shadow-card:
-    0 1px 2px 0 rgba(60, 64, 67, 0.24), 0 2px 6px 2px rgba(60, 64, 67, 0.1);
-  --shadow-glass: 0 8px 28px rgba(60, 64, 67, 0.16);
+    0 1px 2px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(0, 0, 0, 0.07);
+  --shadow-glass: 0 8px 28px rgba(0, 0, 0, 0.12);
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
@@ -62,33 +58,32 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    /* M3 v2 (dark) */
-    --bg: #131314;
-    --bg-alt: #1e1e20;
-    --bg-raised: #28282b;
-    --border: #3c3c43;
-    --border-strong: #54545c;
-    --text: #e4e4e7;
-    --muted: #a1a1a6;
-    --faint: #717176;
+    --bg: #111111;
+    --bg-alt: #1c1c1e;
+    --bg-raised: #262628;
+    --border: #3a3a3c;
+    --border-strong: #545458;
+    --text: #f5f5f7;
+    --muted: #aeaeb2;
+    --faint: #747478;
 
-    --accent: #a8c7fa;
-    --accent-hover: #c1d9fc;
-    --on-accent: #062e6f;
-    --primary-container: #23477d;
-    --on-primary-container: #d2e3fc;
-    --green-container: #0f3d1e;
-    --on-green-container: #ceead6;
-    --red-container: #5c1b13;
-    --on-red-container: #f8d7d3;
-    --g-red: #f28b82;
-    --g-yellow: #fdd663;
-    --g-green: #81c995;
-    --g-purple: #d7aefb;
+    --accent: #ff9f0a;
+    --accent-hover: #ffb340;
+    --on-accent: #2b1700;
+    --primary-container: #5a3000;
+    --on-primary-container: #ffe0b2;
+    --green-container: #153d20;
+    --on-green-container: #d4f4dc;
+    --red-container: #5a1c18;
+    --on-red-container: #ffd9d5;
+    --g-red: #ff6961;
+    --g-yellow: #ffd60a;
+    --g-green: #30d158;
+    --g-purple: #bf5af2;
 
-    --danger: #f28b82;
-    --danger-hover: #faaba9;
-    --header-bg: rgba(19, 19, 20, 0.82);
+    --danger: #ff6961;
+    --danger-hover: #ff8983;
+    --header-bg: rgba(20, 20, 20, 0.86);
     --shadow-card: none;
     --shadow-glass: none;
   }
@@ -110,7 +105,7 @@ body {
   transition: background 0.35s ease, color 0.35s ease;
 }
 
-::selection { background: rgba(0, 113, 227, 0.18); }
+::selection { background: rgba(255, 149, 0, 0.2); }
 
 /* ── Micro label (mono, uppercase) ── */
 .mono {
@@ -282,7 +277,7 @@ body {
 .btn-danger { background: var(--danger); border-color: var(--danger); color: #fff; }
 .btn-danger:hover { background: var(--danger-hover); }
 .btn-ghost-accent { color: var(--accent); border-color: var(--accent); background: transparent; }
-.btn-ghost-accent:hover { background: rgba(66, 133, 244, 0.08); }
+.btn-ghost-accent:hover { background: rgba(255, 149, 0, 0.1); }
 /* Material tonal button — Google signature */
 .btn-tonal { background: var(--primary-container); border-color: transparent; color: var(--on-primary-container); }
 .btn-tonal:hover { background: color-mix(in srgb, var(--primary-container) 80%, var(--accent) 20%); }
@@ -446,15 +441,6 @@ body {
   transition: filter 0.2s;
 }
 .export-pill:hover { filter: brightness(0.97); }
-
-/* Google multi-colour brand dots */
-.g-dots { display: inline-flex; gap: 3px; margin-left: 0.15rem; }
-.g-dots i {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  display: inline-block;
-}
 
 /* ── Footer ── */
 .app-footer { text-align: center; padding: 3.25rem 0 1.5rem; font-size: 0.75rem; color: var(--faint); letter-spacing: 0; }

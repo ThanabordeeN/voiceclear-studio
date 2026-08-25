@@ -4,10 +4,10 @@ import type { Lang } from "../i18n";
 
 /** Per-preset status dot colour (PPotfolio-style live/beta/dev palette). */
 const DOT_COLOR: Record<PresetId, string> = {
-  warm: "#34a853",
-  broadcast: "#fbbc05",
-  natural: "#4285f4",
-  custom: "#a142f4",
+  warm: "#ff9500",
+  broadcast: "#ff6b00",
+  natural: "#8e8e93",
+  custom: "#c75b12",
 };
 
 export function PresetGrid({
