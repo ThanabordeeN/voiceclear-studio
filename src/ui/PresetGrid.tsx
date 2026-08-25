@@ -21,7 +21,7 @@ export function PresetGrid({
 }) {
   const order: PresetId[] = ["warm", "broadcast", "natural", "custom"];
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {order.map((id) => {
         const p = PRESETS[id];
         const selected = id === active;

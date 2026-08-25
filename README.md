@@ -5,6 +5,8 @@
 
 ![stack](https://img.shields.io/badge/Vite-React%2018-emerald) ![audio](https://img.shields.io/badge/Web%20Audio-AudioWorklet-blue) ![ai](https://img.shields.io/badge/AI-RNNoise%20WASM-purple)
 
+![VoiceClear Studio preview](docs/images/voiceclear-studio.png)
+
 ## Missions
 
 1. **AEC** — Acoustic Echo Cancellation (browser-native via getUserMedia constraints)
@@ -62,5 +64,5 @@ with offline file denoising via OfflineAudioContext (v1.1).
 
 ## Spec & Plan
 
-- Design spec: `../docs/superpowers/specs/2026-02-05-voiceclear-studio-design.md`
-- Implementation plan: `../docs/superpowers/plans/2026-02-05-voiceclear-studio.md`
+- [Design spec](docs/specs/2026-02-05-voiceclear-studio-design.md)
+- [Implementation plan](docs/plans/2026-02-05-voiceclear-studio.md)

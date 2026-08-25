@@ -15,7 +15,7 @@ export function EqPanel({
   t: T;
 }) {
   return (
-    <div className={`grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 ${disabled ? "pointer-events-none opacity-40" : ""}`}>
+    <div className={`grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 ${disabled ? "pointer-events-none opacity-60" : ""}`}>
       <Slider
         label={t("denoise")}
         value={params.denoiseStrength}

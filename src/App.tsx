@@ -236,14 +236,16 @@ export default function App() {
       )}
 
       {/* ── Main workspace ── */}
-      <main className="app-main grid grid-cols-1 gap-7 lg:grid-cols-[1fr_350px]">
-        {/* Left: signal + custom EQ */}
-        <div className="flex flex-col gap-7">
-          <Panel title="Signal" icon={<Activity size={13} />}>
+      <main className="app-main workspace-grid">
+        <div className="workspace-signal">
+          <Panel className="h-full" title="Signal" icon={<Activity size={13} />}>
             {running ? (
               <VisualizerStack engine={engine} t={t} />
             ) : (
-              <div className="flex h-56 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-[var(--faint)]" style={{ borderColor: "var(--border-strong)" }}>
+              <div
+                className="flex h-56 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-[var(--faint)]"
+                style={{ borderColor: "var(--border-strong)" }}
+              >
                 <Waves size={26} strokeWidth={1.5} />
                 <p className="max-w-xs text-center text-sm">
                   {state === "starting"
@@ -255,39 +257,10 @@ export default function App() {
               </div>
             )}
           </Panel>
-
-          <Panel
-            title={`${t("customEq")} · Sliders`}
-            icon={<SlidersHorizontal size={13} />}
-          >
-            <EqPanel
-              params={params}
-              onPatch={(p) => {
-                if (presetId !== "custom") {
-                  setPresetId("custom");
-                  const base = { ...PRESETS.custom.dsp };
-                  setParams(base);
-                  engine.setPreset(base);
-                }
-                patchParams(p);
-              }}
-              disabled={presetId !== "custom"}
-              t={t}
-            />
-            {presetId !== "custom" && (
-              <p className="mt-3 text-[11px] text-[var(--faint)]">
-                {lang === "th"
-                  ? "เลือกโปรไฟล์ Custom เพื่อปรับค่าได้"
-                  : "Switch to the Custom profile to edit values"}
-              </p>
-            )}
-          </Panel>
         </div>
 
-        {/* Right: transport + presets + status */}
-        <div className="flex flex-col gap-7">
-          <Panel>
-            {/* Devices */}
+        <div className="workspace-controls">
+          <Panel className="h-full">
             <div className="mb-6 grid grid-cols-1 gap-4">
               <label className="block">
                 <span className="f-label">{t("inputDevice")}</span>
@@ -325,7 +298,6 @@ export default function App() {
               </label>
             </div>
 
-            {/* Transport */}
             <div className="flex flex-wrap items-center gap-3">
               {!running ? (
                 <button
@@ -337,11 +309,7 @@ export default function App() {
                   <Mic size={15} /> {t("startMic")}
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={stopMic}
-                  className="btn"
-                >
+                <button type="button" onClick={stopMic} className="btn">
                   <Square size={13} /> {t("stopMic")}
                 </button>
               )}
@@ -387,7 +355,6 @@ export default function App() {
               </a>
             )}
 
-            {/* Toggles */}
             <div className="mt-6 flex flex-col gap-4">
               <Toggle
                 label={t("monitor")}
@@ -409,10 +376,42 @@ export default function App() {
               />
             </div>
           </Panel>
+        </div>
 
-          <Panel title={t("presets")}>
+        <div className="workspace-eq">
+          <Panel
+            className="h-full"
+            title={`${t("customEq")} · Sliders`}
+            icon={<SlidersHorizontal size={13} />}
+          >
+            <EqPanel
+              params={params}
+              onPatch={(p) => {
+                if (presetId !== "custom") {
+                  setPresetId("custom");
+                  const base = { ...PRESETS.custom.dsp };
+                  setParams(base);
+                  engine.setPreset(base);
+                }
+                patchParams(p);
+              }}
+              disabled={presetId !== "custom"}
+              t={t}
+            />
+            {presetId !== "custom" && (
+              <p className="custom-lock-note">
+                {lang === "th"
+                  ? "เลือกโปรไฟล์ Custom เพื่อปลดล็อกการปรับแต่ง"
+                  : "Choose the Custom profile to unlock these controls"}
+              </p>
+            )}
+          </Panel>
+        </div>
+
+        <div className="workspace-presets">
+          <Panel className="h-full" title={t("presets")}>
             <PresetGrid active={presetId} onSelect={applyPreset} lang={lang} />
-            <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3">
+            <div className="mt-5 flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] px-4 py-3">
               <span className="f-label" style={{ marginBottom: 0 }}>
                 {t("engine")}
               </span>
@@ -431,9 +430,11 @@ export default function App() {
               </select>
             </div>
           </Panel>
+        </div>
 
+        <div className="workspace-status">
           <Panel title="Status">
-            <dl className="grid grid-cols-3 gap-4">
+            <dl className="status-grid">
               <Stat
                 label={t("latency")}
                 value={running ? `${latencyMs}` : "—"}

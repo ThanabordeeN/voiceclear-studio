@@ -53,8 +53,8 @@
   --font-mono:
     ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
-  --max-w: 1100px;
-  --pad: clamp(1.75rem, 6vw, 4rem);
+  --max-w: 1200px;
+  --pad: clamp(1.5rem, 4vw, 4rem);
   --radius-lg: 20px;
   --radius-md: 16px;
 }
@@ -161,7 +161,60 @@ body {
 .seg-btn.active { color: var(--text); background: var(--bg); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 
 /* ── Main container / hero ── */
-.app-main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad) 5rem; }
+.app-main {
+  width: 100%;
+  max-width: calc(var(--max-w) + var(--pad) + var(--pad));
+  margin: 0 auto;
+  padding: 0 var(--pad) 6rem;
+}
+
+/* Dashboard rows stay aligned instead of two independent uneven columns. */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  grid-template-areas:
+    "signal controls"
+    "eq presets"
+    "status status";
+  gap: 1.75rem;
+  align-items: stretch;
+}
+.workspace-grid > div { min-width: 0; }
+.workspace-signal { grid-area: signal; }
+.workspace-controls { grid-area: controls; }
+.workspace-eq { grid-area: eq; }
+.workspace-presets { grid-area: presets; }
+.workspace-status { grid-area: status; }
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  width: min(100%, 640px);
+  margin: 0 auto;
+}
+.custom-lock-note {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: var(--on-primary-container);
+  background: var(--primary-container);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+@media (max-width: 1000px) {
+  .workspace-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "signal"
+      "controls"
+      "eq"
+      "presets"
+      "status";
+  }
+}
+@media (max-width: 600px) {
+  .status-grid { grid-template-columns: minmax(0, 1fr); }
+}
 .hero {
   text-align: center;
   padding: clamp(3.75rem, 11vh, 7rem) 0 clamp(3.25rem, 8vh, 5rem);
@@ -325,9 +378,11 @@ body {
 
 /* ── Preset cards ── */
 .preset-card {
+  position: relative;
+  min-height: 128px;
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 1.15rem 1.3rem;
+  padding: 1rem 1.1rem;
   text-align: left;
   background: transparent;
   cursor: pointer;
@@ -341,9 +396,32 @@ body {
 }
 .preset-card.active .preset-name { color: var(--on-primary-container); }
 .preset-card.active .preset-desc { color: color-mix(in srgb, var(--on-primary-container) 75%, transparent); }
-.preset-name { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em; }
-.preset-desc { margin-top: 0.5rem; font-size: 0.8rem; line-height: 1.55; color: var(--muted); }
-.preset-dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; }
+.preset-name {
+  display: block;
+  padding-right: 1.35rem;
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.preset-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.preset-dot {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.05rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
 
 /* ── Error / alert ── */
 .alert { border: 1px solid rgba(255, 59, 48, 0.35); background: rgba(255, 59, 48, 0.08); color: var(--danger); border-radius: var(--radius-md); padding: 0.8rem 1.1rem; font-size: 0.9rem; }
