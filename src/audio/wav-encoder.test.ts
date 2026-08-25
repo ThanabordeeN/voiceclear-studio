@@ -50,12 +50,10 @@ describe("encodeWav", () => {
     const signed = v > 0x7fffff ? v - 0x1000000 : v;
     expect(signed).toBeCloseTo(Math.round(0.5 * 0x7fffff), -1);
 
-    // negative half
+    // negative half — sign bit lives in the top byte of the 3-byte sample
     const blob2 = encodeWav([Float32Array.of(-0.5)], 44100);
     const b2 = await bytes(blob2);
-    const raw =
-      b2[44] | (b2[45] << 8) | (b2[46] << 16) | (b2[47] << 24);
-    expect(raw).toBeLessThan(0); // sign bit set
+    expect(b2[46] & 0x80).not.toBe(0);
   });
 
   it("clamps out-of-range samples to full scale", async () => {
@@ -65,8 +63,8 @@ describe("encodeWav", () => {
     expect(b[44]).toBe(0xff);
     expect(b[45]).toBe(0xff);
     expect(b[46]).toBe(0x7f);
-    // −full scale = −0x800000
-    expect(b[47]).toBe(0x00);
+    // −full scale = −0x7FFFFF (symmetric scaling)
+    expect(b[47]).toBe(0x01);
     expect(b[48]).toBe(0x00);
     expect(b[49]).toBe(0x80);
   });
