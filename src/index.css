@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Segoe UI",
+    "Noto Sans Thai", sans-serif;
+}
